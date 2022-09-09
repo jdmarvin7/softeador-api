@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Time {
+  id      String    @id   @default(uuid())
+  nome    String    @unique
+  logo    String?
+  foto    String?
+  colaboradores Colaborador[]
+
+  @@map("times")
+}
+
+model Colaborador {
+  id      String    @id   @default(uuid())
+  nome    String
+  avatar  String
+  id_time String
+  time    Time     @relation(fields: [id_time], references: [id])
+  isFacilitador Boolean @default(false)
+  isSecretario  Boolean @default(false)
+  id_cargo  String
+  cargo   Papel     @relation(fields: [id_cargo], references: [id])
+
+  @@map("colaboradores")
+}
+
+model Papel {
+  id      String    @id   @default(uuid())
+  nome    String
+  descricao String?
+  colaborador Colaborador[]
+
+  @@map("papeis")
+}
